@@ -28,6 +28,32 @@ arch_model <- garch(retornos, order = c(0, 1))
 # Mostrar los resultados del modelo
 summary(arch_model)
 
+#Modelo ARCH con pronósticos:
+# Instalar y cargar las librerías necesarias
+install.packages("quantmod")
+install.packages("rugarch")
+library(quantmod)
+library(rugarch)
+# Descargar datos históricos de una acción (por ejemplo, Apple Inc.)
+getSymbols("AAPL", from = "2020-01-01", to = Sys.Date())
+# Obtener precios de cierre
+precios_cierre <- Cl(AAPL)
+# Calcular los retornos logarítmicos
+retornos <- diff(log(precios_cierre))
+# Eliminar los NA resultantes de la diferencia
+retornos <- na.omit(retornos)
+# Especificar el modelo ARCH
+spec <- ugarchspec(
+variance.model = list(model = "sGARCH", garchOrder = c(1, 0)),
+  mean.model = list(armaOrder = c(0, 0)),
+  distribution.model = "norm")
+# Ajustar el modelo ARCH
+fit <- ugarchfit(spec = spec, data = retornos)
+# Hacer un pronóstico de 10 días
+forecast <- ugarchforecast(fit, n.ahead = 10)
+# Mostrar los resultados del pronóstico
+print(forecast)
+
 
 #Modelo GARCH (modelar series con varianza heteroscedástica)
 install.packages("rugarch")
