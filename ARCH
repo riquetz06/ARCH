@@ -9,6 +9,24 @@ arch_model <- garch(returns, order = c(0, 1))
 summary(arch_model)
 # Graficar el ajuste del modelo ARCH
 plot(arch_model)
+#Con retornos:
+# Instalar y cargar las librerías necesarias
+install.packages("quantmod")
+install.packages("tseries")
+library(quantmod)
+library(tseries)
+# Descargar datos históricos de una acción (por ejemplo, Apple Inc.)
+getSymbols("AAPL", from = "2020-01-01", to = Sys.Date())
+# Obtener precios de cierre
+precios_cierre <- Cl(AAPL)
+# Calcular los retornos logarítmicos
+retornos <- diff(log(precios_cierre))
+# Eliminar los NA resultantes de la diferencia
+retornos <- na.omit(retornos)
+# Ajustar el modelo ARCH
+arch_model <- garch(retornos, order = c(0, 1))
+# Mostrar los resultados del modelo
+summary(arch_model)
 
 
 #Modelo GARCH (modelar series con varianza heteroscedástica)
